@@ -296,7 +296,7 @@ namespace spotiq_backend.DataAccess
         {
             DateTime startTime = DateTime.Now;
             int delayBeforeNextPoll = 10;
-            int pollDurationInMinutes = 1;
+            //int pollDurationInMinutes = 1;
             int pollDurationInSeconds = 30;
 
             Poll? latestPoll = await GetLatestPoll(spotifyHostId);

@@ -137,17 +137,17 @@ namespace spotiq_backend.Controllers
 
             return Ok(psi);
         }
-        [HttpGet("winner/addtoq/")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        [ProducesDefaultResponseType]
-        public async Task<IActionResult> AddToQ()
-        {
-            EfMethods efMethods = new(_context);
-            await efMethods.AddToQ("", "", "", "");
-            //if (psi == null) return NotFound("No poll or winner???");
+        //[HttpGet("winner/addtoq/")]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        //[ProducesDefaultResponseType]
+        ////public async Task<IActionResult> AddToQ()
+        ////{
+        ////    EfMethods efMethods = new(_context);
+        ////    await efMethods.AddToQ("", "", "", "");
+        ////    //if (psi == null) return NotFound("No poll or winner???");
 
-            return Ok();
-        }
+        ////    return Ok();
+        ////}
     }
 }

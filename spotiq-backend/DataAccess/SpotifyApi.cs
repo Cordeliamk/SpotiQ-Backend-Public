@@ -11,11 +11,6 @@ namespace spotiq_backend.DataAccess
 {
     public class SpotifyApi
     {
-      
-        string nyvar = "sdf";
-
-        private Timer _tokenRefreshTimer;
-
         private readonly SpotifyHost _spotifyHost;
         public SpotifyApi(SpotifyHost spotifyHost)
         {
@@ -45,22 +40,24 @@ namespace spotiq_backend.DataAccess
                 if (retryAttempts < 5)
                 {
                     retryAttempts++;
+                    _spotifyHost.AccessToken = await RefreshToken(_spotifyHost.RefreshToken!);
                     Thread.Sleep(retryAttempts * 1000);
-                    var newAccessToken = await RefreshToken();
-                    await AddToQueue(trackId, newAccessToken, retryAttempts);
+                    await AddToQueue(trackId, retryAttempts);
                 }
-                
+                else 
+                {
+                    Console.WriteLine("Cannot reach device. update refresh token");
+                }
             }
-
         }
 
-        public async Task<string> RefreshToken(SpotifyHost spotifyHost)
+        public async Task<string> RefreshToken(string refreshToken)
         {
             var url = "https://accounts.spotify.com/api/token";
             var _client = new HttpClient();
             var content = new Dictionary<string, string>();
             content.Add("grant_type", "refresh_token");
-            content.Add("refresh_token", spotifyHost.RefreshToken);
+            content.Add("refresh_token", refreshToken);
 
             _client.DefaultRequestHeaders.Add("Authorization",
                 "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes($"{_spotifyHost.ClientId}:{_spotifyHost.ClientSecret}")));
