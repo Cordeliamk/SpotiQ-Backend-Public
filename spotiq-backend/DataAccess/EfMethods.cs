@@ -185,7 +185,7 @@ namespace spotiq_backend.DataAccess
             if (host == null) return null;
             Console.WriteLine("\n***Spotify id fra GetWinner(): " + poll.TrackSpotifyId);
 
-            await AddToQ(poll.TrackSpotifyId!, !);
+            await AddToQ(poll.TrackSpotifyId!, host);
 
             return psi;
         }
