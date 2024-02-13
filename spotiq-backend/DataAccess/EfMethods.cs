@@ -164,7 +164,7 @@ namespace spotiq_backend.DataAccess
             {
                 string trackId = poll.TrackSpotifyId!;
                 PollSongInfo returnTrack; 
-                // returner vinner
+                // returns the winner
                 Console.WriteLine("\nFra EFm.GetWinner(): Vinner allerede kåret - bare hent vinneren");
                 
                 PollInfo? pollInfo = await GetPollInfoMinimal(pollId);
@@ -172,7 +172,6 @@ namespace spotiq_backend.DataAccess
                 {
                     if (track.SpotifyId == trackId)
                         return track;
-                    
                 }
                 return null;
             }
@@ -193,8 +192,6 @@ namespace spotiq_backend.DataAccess
         {
             PollInfo? pollInfo = await GetPollInfoMinimal(pollId);
             if (pollInfo == null || pollInfo.Tracks == null) return null;
-
-            //List<PollSongInfo> pollWinners = new(); // 
             PollSongInfo? singlePollWinner = null;
             pollInfo.Tracks = (List<PollSongInfo>)pollInfo.Tracks;
             int winnerId = 0;
@@ -227,7 +224,7 @@ namespace spotiq_backend.DataAccess
             _spotiqContext.Update(poll);
             await _spotiqContext.SaveChangesAsync();
             //pollInfo.Tracks[0].
-             //Set winner in Poll
+            //Set winner in Poll
             //Poll? poll = _spotiqContext
 
             return singlePollWinner;
