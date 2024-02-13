@@ -5,34 +5,32 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System;
 using System.Net;
+using spotiq_backend.Domain.Entities;
 
 namespace spotiq_backend.DataAccess
 {
     public class SpotifyApi
     {
-        //string c_access_token = "AddurspotifyAccessTokenHere go to - https://developer.spotify.com/";
-        //string c_refresh_token = "AddurspotifyrefreshTokenHere go to - https://developer.spotify.com/";
-        string client_id = "Addurspotifyclient_idHere go to - https://developer.spotify.com/";
-        string client_secret = "AddurClientSecretHere go to - https://developer.spotify.com/";
+      
         string nyvar = "sdf";
 
         private Timer _tokenRefreshTimer;
 
-        private readonly SpotiqContext _spotiqContext;
-        public SpotifyApi(SpotiqContext spotiqContext)
+        private readonly SpotifyHost _spotifyHost;
+        public SpotifyApi(SpotifyHost spotifyHost)
         {
-            _spotiqContext = spotiqContext;
+            _spotifyHost = spotifyHost;
         }
 
         //public async void AddToQueue()
-        public async Task AddToQueue(string trackId, string accessToken, string refreshToken, string deviceId, int retryAttempts)
+        public async Task AddToQueue(string trackId, int retryAttempts)
         {
             string trackUri = "spotify:track:" + trackId;
             var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _spotifyHost.AccessToken);
             var content = new StringContent(JsonConvert.SerializeObject(new { uri = trackUri }), Encoding.UTF8, "application/json");
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            string url = $"https://api.spotify.com/v1/me/player/queue?device_id={deviceId}&uri={trackUri}";
+            string url = $"https://api.spotify.com/v1/me/player/queue?device_id={_spotifyHost.DeviceId}&uri={trackUri}";
             Console.WriteLine(url);
             var response = await client
                 .PostAsync(url, content);
@@ -40,7 +38,6 @@ namespace spotiq_backend.DataAccess
             try
             {
                 response.EnsureSuccessStatusCode();
-
             }
             catch (Exception ex)
             {
@@ -49,25 +46,24 @@ namespace spotiq_backend.DataAccess
                 {
                     retryAttempts++;
                     Thread.Sleep(retryAttempts * 1000);
-                    var newAccessToken = await RefreshToken(refreshToken);
-                    await AddToQueue(trackId, newAccessToken, refreshToken, deviceId, retryAttempts);
+                    var newAccessToken = await RefreshToken();
+                    await AddToQueue(trackId, newAccessToken, retryAttempts);
                 }
                 
             }
 
-
         }
 
-        public async Task<string> RefreshToken(string refreshToken)
+        public async Task<string> RefreshToken(SpotifyHost spotifyHost)
         {
             var url = "https://accounts.spotify.com/api/token";
             var _client = new HttpClient();
             var content = new Dictionary<string, string>();
             content.Add("grant_type", "refresh_token");
-            content.Add("refresh_token", refreshToken);
+            content.Add("refresh_token", spotifyHost.RefreshToken);
 
             _client.DefaultRequestHeaders.Add("Authorization",
-                "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes($"{client_id}:{client_secret}")));
+                "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes($"{_spotifyHost.ClientId}:{_spotifyHost.ClientSecret}")));
             var req = new HttpRequestMessage(HttpMethod.Post, url) { Content = new FormUrlEncodedContent(content) };
             var response = await _client.SendAsync(req);
             var json = await response.Content.ReadAsStringAsync();

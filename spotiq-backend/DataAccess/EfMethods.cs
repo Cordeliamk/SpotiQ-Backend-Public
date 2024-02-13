@@ -10,11 +10,10 @@ namespace spotiq_backend.DataAccess
     public class EfMethods
     {
         private readonly SpotiqContext _spotiqContext;
-        private readonly SpotifyApi _spotifyApi;
+       
         public EfMethods(SpotiqContext spotiqContext)
         {
             _spotiqContext = spotiqContext;
-            _spotifyApi = new SpotifyApi(_spotiqContext);
         }
         #region Songwish methods
         public async Task<int> CreateSongwish(Songwish songwish)
@@ -136,13 +135,16 @@ namespace spotiq_backend.DataAccess
             return pollInfo;
         }
 
-        public async Task AddToQ(string trackId, string accessToken, string refreshToken, string deviceId)
+        public async Task AddToQ(string trackId, SpotifyHost spotifyHost)
         {
-            
+            SpotifyApi spotifyApi = new(spotifyHost);
+
+            await spotifyApi.AddToQueue(trackId, SpotifyHost spotifyHost );
+
             // hent spotifYHost
-            SpotifyHost? spotifyHost = await GetDefaultHost();
-            if (spotifyHost == null) return;
-            await _spotifyApi.AddToQueue(trackId, accessToken, refreshToken, deviceId, 0);
+            //SpotifyHost? spotifyHost = await GetDefaultHost();
+            //if (spotifyHost == null) return;
+            //await _spotifyApi.AddToQueue(trackId, accessToken, refreshToken, deviceId, 0);
 
         }
 
@@ -180,7 +182,7 @@ namespace spotiq_backend.DataAccess
             if (host == null) return null;
             Console.WriteLine("\n***Spotify id fra GetWinner(): " + poll.TrackSpotifyId);
 
-            await AddToQ(poll.TrackSpotifyId!, host.AccessToken!, host.RefreshToken!, host.DeviceId!);
+            await AddToQ(poll.TrackSpotifyId!, !);
 
             return psi;
         }
