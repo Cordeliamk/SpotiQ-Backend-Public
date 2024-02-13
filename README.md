@@ -1,5 +1,5 @@
 The Backend for the Web-Aplication SpotiQueue 
-- This was created 7months ago, my first asp.net Api project, a lot should have been done differently.
+- This was created 10months ago, my first asp.net Api project, a lot should have been done differently.
 - Now working on changing the code, so there is no need for hardcoded sensetiv information. 
 
 Watch a demo here - https://youtu.be/YXbg9j6xO7Y
