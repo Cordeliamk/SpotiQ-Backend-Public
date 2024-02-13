@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Collections;
+using Microsoft.Extensions.Hosting;
 
 
 namespace spotiq_backend.DataAccess
@@ -139,12 +140,14 @@ namespace spotiq_backend.DataAccess
         {
             SpotifyApi spotifyApi = new(spotifyHost);
 
-            await spotifyApi.AddToQueue(trackId, SpotifyHost spotifyHost );
-
-            // hent spotifYHost
-            //SpotifyHost? spotifyHost = await GetDefaultHost();
-            //if (spotifyHost == null) return;
-            //await _spotifyApi.AddToQueue(trackId, accessToken, refreshToken, deviceId, 0);
+            try
+            {
+            await spotifyApi.AddToQueue(trackId, 0);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"failed: {e.Message}");
+            }
 
         }
 
