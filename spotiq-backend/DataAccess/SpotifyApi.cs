@@ -16,8 +16,7 @@ namespace spotiq_backend.DataAccess
         {
             _spotifyHost = spotifyHost;
         }
-
-        //public async void AddToQueue()
+        
         public async Task AddToQueue(string trackId, int retryAttempts)
         {
             string trackUri = "spotify:track:" + trackId;
@@ -66,52 +65,9 @@ namespace spotiq_backend.DataAccess
             var json = await response.Content.ReadAsStringAsync();
             var data = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
             return data["access_token"];
-            //var access_token = data["access_token"];
         }
         
     }
 }
 
 
-/*
-        public async Task<string?> RefreshToken2()
-        {
-            var content = "grant_type=refresh_token&";
-            content += "refresh_token=" + f_refresh_token; //GetFromDb
-            content += "&client_id=" + client_id;
-            HttpContent httpContent = new StringContent(content);
-
-            _client.DefaultRequestHeaders.Add("Authorization",
-                "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes($"{client_id}:{client_secret}")));
-            _client.DefaultRequestHeaders.Add("Content-Type", "application/x-www-form-urlencoded");
-            var response = await _client.PostAsync("https://accounts.spotify.com/api/token", httpContent);
-            Console.WriteLine(response.StatusCode);
-            Console.WriteLine(response.Content);
-            var json = await response.Content.ReadAsStringAsync();
-            var data = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
-            return data["access_token"];
-            //var access_token = data["access_token"];
-        }*/
-
-/*
-        private async Task<string> RefreshAccessTokenAsync()
-        {
-            var tokenEndpoint = "https://accounts.spotify.com/api/token";
-            var authHeader = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{client_id}:{client_secret}"));
-            var content = new StringContent($"grant_type=refresh_token&refresh_token={f_refresh_token}");
-            var request = new HttpRequestMessage(HttpMethod.Post, tokenEndpoint);
-            request.Headers.Authorization = new AuthenticationHeaderValue("Basic", authHeader);
-            request.Content = content;
-
-            var response = await _client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-            var json = await response.Content.ReadAsStringAsync();
-            var tokenResponse = JsonConvert.DeserializeObject<dynamic>(json);
-            var access_token = tokenResponse.access_token;
-            Console.WriteLine(access_token);
-            var expiresIn = TimeSpan.FromSeconds((int)tokenResponse.expires_in);
-            var refreshInterval = expiresIn.Subtract(TimeSpan.FromMinutes(5));
-            _tokenRefreshTimer = new Timer(async _ => await RefreshAccessTokenAsync(), null, refreshInterval, Timeout.InfiniteTimeSpan);
-            return access_token;
-
-        }*/
