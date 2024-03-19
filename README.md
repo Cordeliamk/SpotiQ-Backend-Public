@@ -14,7 +14,7 @@ This Repository is an edited verison of the original, that had my personal token
 
 Take into considuration that you need to get your own Access Token, Refresh Token, ClientId, ClientSeectret and deviceID find out more on how you access them here: https://developer.spotify.com/documentation/web-api
 
-As for now this needs to be addded to ur local database. ClientId / ClientSeecret needs to be added to the SpotifyAPI Class(This will be changed shortly)
+As for now this needs to be addded to ur local database.
 
 <img width="421" alt="SpotiQ Database Host" src="https://github.com/Cordeliamk/SpotiQ-Backend-Public/assets/123935150/b34c4b8f-ec1d-43f5-8536-005c93d7669f">
 
